@@ -1,0 +1,45 @@
+apply plugin: 'com.android.application'
+// 对应文件名./svn-plugin/src/main/resources/META-INF/gradle-plugins/svn-plugin.properties
+apply plugin: 'svn-plugin'// 如果插件报错先注释当前行，插件编译通过后再打开注释
+
+android {
+    compileSdkVersion 28
+
+
+    defaultConfig {
+        applicationId "com.dede.demo"
+        minSdkVersion 15
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        flavorDimensions versionName
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.debug// 调试使用debug签名
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    productFlavors {
+        dev {}
+        market {}
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            def buildType = variant.buildType.name
+            def version = "${variant.versionName}(${variant.versionCode})"
+            def flavor = variant.productFlavors[0].name
+            outputFileName = "demo_${flavor}_${buildType}_${version}.apk"
+        }
+    }
+
+}
+
+dependencies {
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+}
