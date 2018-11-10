@@ -9,9 +9,9 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.1'
-        classpath 'com.dede.svnplugin:svn-plugin:1.0.0'// groupId:moduleName:version
+        classpath 'com.dede.svnplugin:svn-plugin:1.0.3'// groupId:moduleName:version
 
-//         NOTE: Do not place your application dependencies here; they belong
+        // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
 }
@@ -20,6 +20,15 @@ allprojects {
     repositories {
         google()
         jcenter()
+    }
+
+    tasks.withType(Javadoc).all {
+        enabled = false
+        options.encoding = 'UTF-8'
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
     }
 }
 

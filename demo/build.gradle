@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 // 对应文件名./svn-plugin/src/main/resources/META-INF/gradle-plugins/svn-plugin.properties
-apply plugin: 'svn-plugin'// 如果插件报错先注释当前行，插件编译通过后再打开注释
+apply plugin: 'com.dede.svn-plugin'// 如果插件报错先注释当前行，插件编译通过后再打开注释
 
 android {
     compileSdkVersion 28
