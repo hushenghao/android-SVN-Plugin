@@ -1,12 +1,11 @@
 plugins {
     id "com.gradle.plugin-publish" version "0.10.0"
     id "java-gradle-plugin"
+    id "groovy"
+    id "maven"
     // Apply other plugins here, e.g. the kotlin plugin for a plugin written in Kotlin
     // or the groovy plugin if the plugin uses Groovy
 }
-
-apply plugin: 'groovy'
-apply plugin: 'maven'
 
 uploadArchives {
     repositories {
@@ -28,26 +27,18 @@ repositories {
 }
 
 group = 'com.dede.svnplugin'
-version = '1.0.3'
-
-gradlePlugin {
-    plugins {
-        greetingsPlugin {
-            id = 'com.dede.svnplugin'
-            implementationClass = 'com.dede.svnplugin.plugin.SVNPluginImpl'
-        }
-    }
-}
+version = '0.0.6'
 
 pluginBundle {
-    website = 'http://www.gradle.org/'
-    vcsUrl = 'https://github.com/gradle/gradle'
+    website = 'https://github.com/hushenghao/android-SVN-Plugin'
+    vcsUrl = 'https://github.com/hushenghao/android-SVN-Plugin.git'
     description = 'Android assembleRelease Package and auto commit to SVN'
-    tags = ['Android Studio', 'Android', 'SVN', 'auto']
+    tags = ['android', 'java', 'Android Studio', 'SVN', 'auto']
 
     plugins {
-        greetingsPlugin {
-            displayName = 'SVN-Plugin'
+        gradleSVNPlugin {
+            id = 'com.dede.svn-plugin'
+            displayName = 'SVN-Plugin for Android'
         }
     }
 }

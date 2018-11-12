@@ -23,10 +23,11 @@ import java.io.File;
 public class Commit2SVN extends DefaultTask {
 
     @Input
-    File input;
+    public File input;
 
     @TaskAction
     public void action() {
+        System.out.println("SVN-Plugin =====>>>> Commit2SVN");
         if (!Config.PLUGIN_STATE) {
             System.out.println("SVN-Plugin is Disable!!!");
             return;

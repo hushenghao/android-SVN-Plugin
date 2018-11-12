@@ -1,7 +1,6 @@
 package com.dede.svnplugin.plugin
 
 import com.android.build.gradle.api.BaseVariant
-import com.android.build.gradle.api.BaseVariantOutput
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.ProjectConfigurationException
@@ -48,14 +47,14 @@ class SVNPluginImpl implements Plugin<Project> {
     private static void applyTask(Project project) {
         project.afterEvaluate {
             project.android.applicationVariants.all { BaseVariant variant ->
-                def variantName = variant.name.capitalize()
                 if (variant.buildType.name != 'release') return
 
+                def variantName = variant.name.capitalize()
                 def task = project.tasks.create("commit${variantName}Package2SVN",
                         com.dede.svnplugin.task.Commit2SVN.class)// don't remove package
                 task.setGroup("svn plugin")
 
-                variant.outputs.all { BaseVariantOutput output ->
+                variant.outputs.each { output ->
                     task.input = output.outputFile// 设置apk文件路径
                 }
 
