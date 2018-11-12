@@ -32,7 +32,7 @@ android {
             def buildType = variant.buildType.name
             def version = "${variant.versionName}(${variant.versionCode})"
             def flavor = variant.productFlavors[0].name
-            output.outputFile = new File("demo_${flavor}_${buildType}_${version}.apk")
+            output.outputFile = new File(output.outputFile.parent, "demo_${flavor}_${buildType}_${version}.apk")
         }
     }
 

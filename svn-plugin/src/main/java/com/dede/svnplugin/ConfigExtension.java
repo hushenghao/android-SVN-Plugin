@@ -2,7 +2,7 @@ package com.dede.svnplugin;
 
 import com.dede.svnplugin.util.TextUtil;
 
-import org.gradle.api.ProjectConfigurationException;
+import org.gradle.api.Project;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,37 +29,43 @@ import java.util.Properties;
  * # 导入文件时的提交记录
  * svn.import=可以不设置
  */
-public class Config {
+public class ConfigExtension {
 
     public static String MSG_DELETE = "Delete APK package by svn-plugin";
     public static String MSG_IMPORT = "Import APK package by svn-plugin";
 
-    private static Properties properties;
+    public static boolean PLUGIN_STATE;
 
-    static {
-        properties = new Properties();
-        flushConfig();
-    }
+    public static String SVN_USERNAME;
+    public static String SVN_PASSWORD;
+    public static String SVN_URL;
 
-    public static void flushConfig() {
-        File file = new File("./svn-config.properties");
+    public ConfigExtension(Project project) {
+        File file = new File(project.getRootDir(), "svn-config.properties");
+        System.out.println("SVN-Plugin load config ===>>> " + file.getAbsolutePath());
         try {
+            Properties properties = new Properties();
             properties.load(new InputStreamReader(new FileInputStream(file), "utf-8"));// 中文转码
             String message = properties.getProperty("svn.delete");
             MSG_DELETE = TextUtil.isNull(message) ? MSG_DELETE : message;
             message = properties.getProperty("svn.import");
             MSG_IMPORT = TextUtil.isNull(message) ? MSG_IMPORT : message;
+
+            PLUGIN_STATE = Boolean.valueOf(properties.getProperty("svn.plugin.state", "true"));
+            SVN_USERNAME = properties.getProperty("svn.username");
+            SVN_PASSWORD = properties.getProperty("svn.password");
+            SVN_URL = properties.getProperty("svn.url");
         } catch (IOException e) {
             e.printStackTrace();
-            throw new ProjectConfigurationException("Plugin load config file " +
-                    file.getAbsolutePath() + " error", e);
+//            throw new ProjectConfigurationException("Plugin load config file " +
+//                    file.getAbsolutePath() + " error", e);
         }
     }
 
-    public static boolean PLUGIN_STATE = Boolean.valueOf(properties.getProperty("svn.plugin.state", "true"));
-
-    public static String SVN_USERNAME = properties.getProperty("svn.username");
-    public static String SVN_PASSWORD = properties.getProperty("svn.password");
-    public static String SVN_URL = properties.getProperty("svn.url");
+    public static void initConfig(Project project) {
+        if (project.getExtensions().findByType(ConfigExtension.class) == null) {
+            new ConfigExtension(project);
+        }
+    }
 
 }

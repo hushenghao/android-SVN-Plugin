@@ -1,8 +1,9 @@
 package com.dede.svnplugin.task;
 
-import com.dede.svnplugin.Config;
+import com.dede.svnplugin.ConfigExtension;
 
 import org.gradle.api.DefaultTask;
+import org.gradle.api.Project;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.TaskAction;
 import org.tmatesoft.svn.core.SVNCommitInfo;
@@ -25,10 +26,16 @@ public class Commit2SVN extends DefaultTask {
     @Input
     public File input;
 
+    @Input
+    public Project targetProject;
+
     @TaskAction
     public void action() {
         System.out.println("SVN-Plugin =====>>>> Commit2SVN");
-        if (!Config.PLUGIN_STATE) {
+
+        ConfigExtension.initConfig(targetProject);
+
+        if (!ConfigExtension.PLUGIN_STATE) {
             System.out.println("SVN-Plugin is Disable!!!");
             return;
         }
@@ -43,9 +50,7 @@ public class Commit2SVN extends DefaultTask {
             throw new IllegalArgumentException("Commit2SVN: input APK file isDirectory :" + input.getAbsolutePath());
         }
 
-        Config.flushConfig();// 刷新配置
-
-        String svnPath = Config.SVN_URL + "/" + input.getName();
+        String svnPath = ConfigExtension.SVN_URL + "/" + input.getName();
         System.out.println("Commit2SVN svnPath ===>>> " + svnPath);
         SVNURL svnUri = parseSVN_URI(svnPath);
         System.out.println("Commit2SVN svnUri ===>>> " + svnUri.getPath());
@@ -71,13 +76,13 @@ public class Commit2SVN extends DefaultTask {
      * @param svnPath svn路径
      * @return
      */
-    private static boolean doImport(File source, SVNURL svnPath) {
+    private boolean doImport(File source, SVNURL svnPath) {
         DAVRepositoryFactory.setup();
         SVNClientManager svnClientManager = SVNClientManager.newInstance(SVNWCUtil.createDefaultOptions(true),
-                Config.SVN_USERNAME, Config.SVN_PASSWORD);
+                ConfigExtension.SVN_USERNAME, ConfigExtension.SVN_PASSWORD);
         try {
             SVNCommitInfo commitInfo = svnClientManager.getCommitClient().doImport(source, svnPath,
-                    Config.MSG_IMPORT, null, false,
+                    ConfigExtension.MSG_IMPORT, null, false,
                     false, SVNDepth.INFINITY);
             System.out.println("Import file to SVN ==>>> Author:" + commitInfo.getAuthor() +
                     ", Data:" + commitInfo.getDate() +
@@ -95,10 +100,10 @@ public class Commit2SVN extends DefaultTask {
      * @param svnPath svn文件地址
      * @return {@link SVNNodeKind#NONE},{@link SVNNodeKind#FILE},{@link SVNNodeKind#DIR}
      */
-    private static SVNNodeKind checkPath(SVNURL svnPath) {
+    private SVNNodeKind checkPath(SVNURL svnPath) {
         DAVRepositoryFactory.setup();
         SVNClientManager svnClientManager = SVNClientManager.newInstance(SVNWCUtil.createDefaultOptions(true),
-                Config.SVN_USERNAME, Config.SVN_PASSWORD);
+                ConfigExtension.SVN_USERNAME, ConfigExtension.SVN_PASSWORD);
         try {
             SVNRepository repository = svnClientManager.createRepository(svnPath, true);
             return repository.checkPath("", SVNRepository.INVALID_REVISION);
@@ -114,12 +119,12 @@ public class Commit2SVN extends DefaultTask {
      * @param svnPath svn路径
      * @return
      */
-    private static boolean doDelete(SVNURL svnPath) {
+    private boolean doDelete(SVNURL svnPath) {
         DAVRepositoryFactory.setup();
         SVNClientManager svnClientManager = SVNClientManager.newInstance(SVNWCUtil.createDefaultOptions(true),
-                Config.SVN_USERNAME, Config.SVN_PASSWORD);
+                ConfigExtension.SVN_USERNAME, ConfigExtension.SVN_PASSWORD);
         try {
-            SVNCommitInfo commitInfo = svnClientManager.getCommitClient().doDelete(new SVNURL[]{svnPath}, Config.MSG_DELETE);
+            SVNCommitInfo commitInfo = svnClientManager.getCommitClient().doDelete(new SVNURL[]{svnPath}, ConfigExtension.MSG_DELETE);
             System.out.println("Delete file from SVN ==>>> Author:" + commitInfo.getAuthor() +
                     ", Data:" + commitInfo.getDate() +
                     ", NewVersion:" + commitInfo.getNewRevision());

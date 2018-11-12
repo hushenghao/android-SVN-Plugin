@@ -41,6 +41,8 @@ class SVNPluginImpl implements Plugin<Project> {
             throw new ProjectConfigurationException("Plugin requires the 'com.android.tools.build:gradle' version 2.2.0 or above to be configured.", null)
         }
 
+        project.extensions.create("com.dede.svn-plugin", com.dede.svnplugin.ConfigExtension.class, project)
+
         applyTask(project)
     }
 
@@ -53,7 +55,7 @@ class SVNPluginImpl implements Plugin<Project> {
                 def task = project.tasks.create("commit${variantName}Package2SVN",
                         com.dede.svnplugin.task.Commit2SVN.class)// don't remove package
                 task.setGroup("svn plugin")
-
+                task.targetProject = project
                 variant.outputs.each { output ->
                     task.input = output.outputFile// 设置apk文件路径
                 }

@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.dede.svnplugin</groupId>
   <artifactId>svn-plugin</artifactId>
-  <version>0.0.6</version>
+  <version>0.0.7</version>
   <dependencies>
     <dependency>
       <groupId>com.android.tools.build</groupId>
