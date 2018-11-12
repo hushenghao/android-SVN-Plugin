@@ -7,6 +7,8 @@ plugins {
     // or the groovy plugin if the plugin uses Groovy
 }
 
+apply from:'bintray.gradle'
+
 uploadArchives {
     repositories {
         mavenDeployer {
@@ -30,8 +32,8 @@ group = 'com.dede.svnplugin'
 version = '0.0.7'
 
 pluginBundle {
-    website = 'https://github.com/hushenghao/android-SVN-Plugin'
-    vcsUrl = 'https://github.com/hushenghao/android-SVN-Plugin.git'
+    website = siteUrl
+    vcsUrl = gitUrl
     description = 'Android assembleRelease Package and auto commit to SVN'
     tags = ['android', 'java', 'Android Studio', 'SVN', 'auto']
 
