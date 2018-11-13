@@ -41,7 +41,7 @@ public class ConfigExtension {
     public static String SVN_URL;
 
     public ConfigExtension(Project project) {
-        File file = new File(project.getRootDir(), "svn-config.properties");
+        File file = new File(project.getRootDir(), "local.properties");
         System.out.println("SVN-Plugin load config ===>>> " + file.getAbsolutePath());
         try {
             Properties properties = new Properties();

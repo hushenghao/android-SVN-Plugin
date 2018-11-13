@@ -8,7 +8,7 @@ Android assembleRelease Package and auto commit to SVN
 
 #### 使用
 
-* 在项目根目录创建文件[svn-config.properties](https://github.com/hushenghao/android-SVN-Plugin/blob/master/svn-config.properties)，内容如下：
+* 在项目根目录文件local.properties中添加内容：
 
         # 设置插件状态false可以关闭自动上传
         svn.plugin.state=true
@@ -27,7 +27,7 @@ Android assembleRelease Package and auto commit to SVN
 
         buildscript {
             dependencies {
-                classpath 'com.dede.svnplugin:svn-plugin:0.0.7+'
+                classpath 'com.dede.svnplugin:svn-plugin:0.0.8'
             }
         }
 
@@ -38,7 +38,7 @@ Android assembleRelease Package and auto commit to SVN
                 maven { url "https://plugins.gradle.org/m2/" }
             }
             dependencies {
-                classpath 'gradle.plugin.com.dede.svnplugin:svn-plugin:0.0.7+'
+                classpath 'gradle.plugin.com.dede.svnplugin:svn-plugin:0.0.8'
             }
         }
 
@@ -49,7 +49,7 @@ Android assembleRelease Package and auto commit to SVN
                 maven { url uri('./repo') }// 仓库路径指向repo文件夹
             }
             dependencies {
-                classpath 'com.dede.svnplugin:svn-plugin:0.0.7'
+                classpath 'com.dede.svnplugin:svn-plugin:0.0.8'
             }
         }
 
