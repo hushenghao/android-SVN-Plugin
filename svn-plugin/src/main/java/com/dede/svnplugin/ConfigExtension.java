@@ -3,6 +3,7 @@ package com.dede.svnplugin;
 import com.dede.svnplugin.util.TextUtil;
 
 import org.gradle.api.Project;
+import org.gradle.api.ProjectConfigurationException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -57,8 +58,8 @@ public class ConfigExtension {
             SVN_URL = properties.getProperty("svn.url");
         } catch (IOException e) {
             e.printStackTrace();
-//            throw new ProjectConfigurationException("Plugin load config file " +
-//                    file.getAbsolutePath() + " error", e);
+            throw new ProjectConfigurationException("Plugin load config file " +
+                    file.getAbsolutePath() + " error", e);
         }
     }
 

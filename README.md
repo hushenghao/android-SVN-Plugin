@@ -27,7 +27,7 @@ Android assembleRelease Package and auto commit to SVN
 
         buildscript {
             dependencies {
-                classpath 'com.dede.svnplugin:svn-plugin:0.0.8'
+                classpath 'com.dede.svnplugin:svn-plugin:0.0.9'
             }
         }
 
@@ -38,7 +38,7 @@ Android assembleRelease Package and auto commit to SVN
                 maven { url "https://plugins.gradle.org/m2/" }
             }
             dependencies {
-                classpath 'gradle.plugin.com.dede.svnplugin:svn-plugin:0.0.8'
+                classpath 'gradle.plugin.com.dede.svnplugin:svn-plugin:0.0.9'
             }
         }
 
@@ -49,7 +49,7 @@ Android assembleRelease Package and auto commit to SVN
                 maven { url uri('./repo') }// 仓库路径指向repo文件夹
             }
             dependencies {
-                classpath 'com.dede.svnplugin:svn-plugin:0.0.8'
+                classpath 'com.dede.svnplugin:svn-plugin:0.0.9'
             }
         }
 
@@ -57,9 +57,9 @@ Android assembleRelease Package and auto commit to SVN
 
         apply plugin: 'com.dede.svn-plugin'// 应用插件
 
-    同步完成后会生成group为svn plugin的commitReleasePackage2SVN的task，如果有多渠道打包会生成多个相应渠道的task
+    同步完成后会生成group为svn的assembleReleaseAndCommitSVN的task，如果有多渠道打包会生成多个相应渠道的task
 
 + 运行task即可生成Release包并上传SVN
 
-        ./gradlew commitReleasePackage2SVN // or
-        ./gradlew commit${渠道名}ReleasePackage2SVN // 多渠道打包
+        ./gradlew assembleReleaseAndCommitSVN // or
+        ./gradlew assemble${渠道名}ReleaseAndCommitSVN // 多渠道打包

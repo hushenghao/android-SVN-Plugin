@@ -52,9 +52,9 @@ class SVNPluginImpl implements Plugin<Project> {
                 if (variant.buildType.name != 'release') return
 
                 def variantName = variant.name.capitalize()
-                def task = project.tasks.create("commit${variantName}Package2SVN",
+                def task = project.tasks.create("assemble${variantName}AndCommitSVN",
                         com.dede.svnplugin.task.Commit2SVN.class)// don't remove package
-                task.setGroup("svn plugin")
+                task.setGroup("svn")
                 task.targetProject = project
                 variant.outputs.each { output ->
                     task.input = output.outputFile// 设置apk文件路径
