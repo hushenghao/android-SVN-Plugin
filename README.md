@@ -57,6 +57,9 @@ Android assembleRelease Package and auto commit to SVN
 
         apply plugin: 'com.dede.svn-plugin'// 应用插件
 
-    同步完成后会生成group为svn plugin的commitReleasePackage2SVN的task
+    同步完成后会生成group为svn plugin的commitReleasePackage2SVN的task，如果有多渠道打包会生成多个相应渠道的task
 
++ 运行task即可生成Release包并上传SVN
 
+        ./gradlew commitReleasePackage2SVN // or
+        ./gradlew commitRelease${渠道名}Package2SVN // 多渠道打包
