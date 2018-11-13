@@ -62,4 +62,4 @@ Android assembleRelease Package and auto commit to SVN
 + 运行task即可生成Release包并上传SVN
 
         ./gradlew commitReleasePackage2SVN // or
-        ./gradlew commitRelease${渠道名}Package2SVN // 多渠道打包
+        ./gradlew commit${渠道名}ReleasePackage2SVN // 多渠道打包
