@@ -1,5 +1,5 @@
 # android-SVN-Plugin
-[![GitHub stable release version](https://img.shields.io/github/release/hushenghao/android-SVN-Plugin.svg?label=android-SVN-Plugin&maxAge=600)](https://github.com/hushenghao/android-SVN-Plugin/releases/latest) [![License](https://img.shields.io/github/license/hushenghao/android-SVN-Plugin.svg?label=License&maxAge=2592000)](https://github.com//hushenghao/android-SVN-Plugin/blob/master/LICENSE)
+[![GitHub stable release version](https://img.shields.io/github/release/hushenghao/android-SVN-Plugin.svg?label=android-SVN-Plugin &maxAge=600)](https://github.com/hushenghao/android-SVN-Plugin/releases/latest) [![License](https://img.shields.io/github/license/hushenghao/android-SVN-Plugin.svg?label=License &maxAge=2592000)](https://github.com/hushenghao/android-SVN-Plugin/blob/master/LICENSE)
 
 Android assembleRelease Package and auto commit to SVN
 安卓打包并上传到svn的插件
