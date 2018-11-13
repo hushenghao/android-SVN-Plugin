@@ -20,7 +20,15 @@ Android assembleRelease Package and auto commit to SVN
         # 添加文件时的修改累日志
         svn.import=
 
-* 依赖插件，两种方式
+* 依赖插件，三种方式
+
+    jcenter仓库依赖，编辑项目根目录build.gradle
+
+        buildscript {
+            dependencies {
+                classpath 'com.dede.svnplugin:svn-plugin:0.0.7'
+            }
+        }
 
     gradle仓库依赖，编辑项目根目录build.gradle
 
@@ -29,8 +37,7 @@ Android assembleRelease Package and auto commit to SVN
                 maven { url "https://plugins.gradle.org/m2/" }
             }
             dependencies {
-                classpath 'com.android.tools.build:gradle:2.2.+'
-                classpath 'gradle.plugin.com.dede.svnplugin:svn-plugin:1.0.3'
+                classpath 'gradle.plugin.com.dede.svnplugin:svn-plugin:0.0.7'
             }
         }
 
@@ -41,8 +48,7 @@ Android assembleRelease Package and auto commit to SVN
                 maven { url uri('./repo') }// 仓库路径指向repo文件夹
             }
             dependencies {
-                classpath 'com.android.tools.build:gradle:2.2.+'
-                classpath 'com.dede.svnplugin:svn-plugin:1.0.3'
+                classpath 'com.dede.svnplugin:svn-plugin:0.0.7'
             }
         }
 
