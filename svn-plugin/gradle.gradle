@@ -1,0 +1,21 @@
+//plugins {
+//    id "com.gradle.plugin-publish" version "0.10.0"
+//    id "java-gradle-plugin"
+//}
+
+apply plugin: 'java-gradle-plugin'
+apply plugin: 'com.gradle.plugin-publish'
+
+pluginBundle {
+    website = siteUrl
+    vcsUrl = gitUrl
+    description = 'Android assembleRelease Package and auto commit to SVN'
+    tags = ['android', 'java', 'Android Studio', 'SVN', 'auto']
+
+    plugins {
+        gradleSVNPlugin {
+            id = 'com.dede.svn-plugin'
+            displayName = 'SVN-Plugin for Android'
+        }
+    }
+}

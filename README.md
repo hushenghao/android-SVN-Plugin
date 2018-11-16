@@ -38,7 +38,7 @@ Android assembleRelease Package and auto commit to SVN
                 maven { url "https://plugins.gradle.org/m2/" }
             }
             dependencies {
-                classpath 'gradle.plugin.com.dede.svnplugin:svn-plugin:0.0.9'
+                classpath 'com.dede.svnplugin:svn-plugin:0.0.9'
             }
         }
 
