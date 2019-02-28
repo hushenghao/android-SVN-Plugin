@@ -3,11 +3,10 @@
   <groupId>com.dede.svnplugin</groupId>
   <artifactId>svn-plugin</artifactId>
   <versioning>
-    <release>0.0.9</release>
+    <release>0.1.0</release>
     <versions>
-      <version>0.0.8</version>
-      <version>0.0.9</version>
+      <version>0.1.0</version>
     </versions>
-    <lastUpdated>20181116033214</lastUpdated>
+    <lastUpdated>20190228071818</lastUpdated>
   </versioning>
 </metadata>

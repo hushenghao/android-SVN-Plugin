@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 /**
@@ -46,7 +47,7 @@ public class ConfigExtension {
         System.out.println("SVN-Plugin load config ===>>> " + file.getAbsolutePath());
         try {
             Properties properties = new Properties();
-            properties.load(new InputStreamReader(new FileInputStream(file), "utf-8"));// 中文转码
+            properties.load(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));// 中文转码
             String message = properties.getProperty("svn.delete");
             MSG_DELETE = TextUtil.isNull(message) ? MSG_DELETE : message;
             message = properties.getProperty("svn.import");

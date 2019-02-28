@@ -1,6 +1,7 @@
 package com.dede.svnplugin.plugin
 
 import com.android.build.gradle.api.BaseVariant
+import com.android.build.gradle.api.BaseVariantOutput
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.ProjectConfigurationException
@@ -56,8 +57,9 @@ class SVNPluginImpl implements Plugin<Project> {
                         com.dede.svnplugin.task.Commit2SVN.class)// don't remove package
                 task.setGroup("svn")
                 task.targetProject = project
-                variant.outputs.each { output ->
-                    task.input = output.outputFile// 设置apk文件路径
+                variant.outputs.each { BaseVariantOutput output ->
+                    // output.getOutputFile() // 内部调用了getPackageApplication方法，但是getPackageApplication已经被废弃，会报警告
+                    task.input = new File(output.getDirName(), output.name)// 设置apk文件路径
                 }
 
                 def assembleTask = project.tasks.findByName("assemble${variantName}")

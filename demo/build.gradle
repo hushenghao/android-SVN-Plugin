@@ -3,15 +3,17 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.dede.svn-plugin'// 如果插件报错先注释当前行，插件编译通过后再打开注释
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     buildToolsVersion "28.0.3"
 
     defaultConfig {
         applicationId "com.dede.demo"
         minSdkVersion 15
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
+
+        flavorDimensions versionName
     }
 
     buildTypes {
@@ -28,17 +30,17 @@ android {
     }
 
     applicationVariants.all { variant ->
-        variant.outputs.each { output ->
+        variant.outputs.all {
             def buildType = variant.buildType.name
             def version = "${variant.versionName}(${variant.versionCode})"
             def flavor = variant.productFlavors[0].name
-            output.outputFile = new File(output.outputFile.parent, "demo_${flavor}_${buildType}_${version}.apk")
+            outputFileName = "demo_${flavor}_${buildType}_${version}.apk"
         }
     }
 
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:27.1.1'
-    compile 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 }

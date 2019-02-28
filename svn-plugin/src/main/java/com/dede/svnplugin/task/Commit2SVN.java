@@ -49,6 +49,7 @@ public class Commit2SVN extends DefaultTask {
         if (input.isDirectory()) {
             throw new IllegalArgumentException("Commit2SVN: input APK file isDirectory :" + input.getAbsolutePath());
         }
+        System.out.println("Commit2SVN filePath ===>>> " + input.getAbsolutePath());
 
         String svnPath = ConfigExtension.SVN_URL + "/" + input.getName();
         System.out.println("Commit2SVN svnPath ===>>> " + svnPath);
