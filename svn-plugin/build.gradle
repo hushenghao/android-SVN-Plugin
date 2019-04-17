@@ -15,8 +15,12 @@ uploadArchives {
 dependencies {
     compile gradleApi()
     compile localGroovy()
-    compile 'com.android.tools.build:gradle:3.3.1'// 使用老板本com.android.application插件
+    compile 'com.android.tools.build:gradle:2.2.0'// 使用老板本com.android.application插件
     compile 'org.tmatesoft.svnkit:svnkit:1.9.3'// svn操作库
+
+    compile 'com.meituan.android.walle:payload_reader:1.1.6'// 美团walle读取模块
+    compile 'com.meituan.android.walle:payload_writer:1.1.6'// 美团walle写入模块
+    compile 'org.json:json:20080701'// walle内部的json解析库
 }
 
 group = 'com.dede.svnplugin'

@@ -50,7 +50,7 @@ class SVNPluginImpl implements Plugin<Project> {
     private static void applyTask(Project project) {
         project.afterEvaluate {
             project.android.applicationVariants.all { BaseVariant variant ->
-                if (variant.buildType.name != 'release') return
+                if (com.dede.svnplugin.ConfigExtension.SVN_IGNORE_DEBUG && variant.buildType.name != 'release') return// 忽略debug task
 
                 def variantName = variant.name.capitalize()
                 def task = project.tasks.create("assemble${variantName}AndCommitSVN",
@@ -58,8 +58,7 @@ class SVNPluginImpl implements Plugin<Project> {
                 task.setGroup("svn")
                 task.targetProject = project
                 variant.outputs.each { BaseVariantOutput output ->
-                    // output.getOutputFile() // 内部调用了getPackageApplication方法，但是getPackageApplication已经被废弃，会报警告
-                    task.input = new File(output.getDirName(), output.name)// 设置apk文件路径
+                    task.input = output.outputFile// 设置apk文件路径
                 }
 
                 def assembleTask = project.tasks.findByName("assemble${variantName}")

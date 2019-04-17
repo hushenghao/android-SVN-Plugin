@@ -41,6 +41,10 @@ public class ConfigExtension {
     public static String SVN_USERNAME;
     public static String SVN_PASSWORD;
     public static String SVN_URL;
+    public static boolean SVN_IGNORE_DEBUG = true;
+
+    public static boolean SVN_WALLE_STATE;
+    public static String SVN_WALLE_CHANNEL;
 
     public ConfigExtension(Project project) {
         File file = new File(project.getRootDir(), "local.properties");
@@ -57,6 +61,12 @@ public class ConfigExtension {
             SVN_USERNAME = properties.getProperty("svn.username");
             SVN_PASSWORD = properties.getProperty("svn.password");
             SVN_URL = properties.getProperty("svn.url");
+            SVN_IGNORE_DEBUG = Boolean.valueOf(properties.getProperty("svn.ignore.debug", "true"));
+
+            SVN_WALLE_STATE = Boolean.valueOf(properties.getProperty("svn.walle.state", "false"));
+            if (SVN_WALLE_STATE) {
+                SVN_WALLE_CHANNEL = properties.getProperty("svn.walle.channel");
+            }
         } catch (IOException e) {
             e.printStackTrace();
             throw new ProjectConfigurationException("Plugin load config file " +

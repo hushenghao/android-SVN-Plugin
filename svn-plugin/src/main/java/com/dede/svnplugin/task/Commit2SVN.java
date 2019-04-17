@@ -1,6 +1,10 @@
 package com.dede.svnplugin.task;
 
 import com.dede.svnplugin.ConfigExtension;
+import com.meituan.android.walle.ChannelInfo;
+import com.meituan.android.walle.ChannelReader;
+import com.meituan.android.walle.ChannelWriter;
+import com.meituan.android.walle.SignatureNotFoundException;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.Project;
@@ -17,6 +21,7 @@ import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * 上传文件到svn
@@ -40,15 +45,10 @@ public class Commit2SVN extends DefaultTask {
             return;
         }
 
-        if (input == null) {
-            throw new IllegalArgumentException("Commit2SVN: input APK file is null");
-        }
-        if (!input.exists()) {
-            throw new IllegalArgumentException("Commit2SVN: input APK file un exists :" + input.getAbsolutePath());
-        }
-        if (input.isDirectory()) {
-            throw new IllegalArgumentException("Commit2SVN: input APK file isDirectory :" + input.getAbsolutePath());
-        }
+        checkFile();
+
+        writeChannel();
+
         System.out.println("Commit2SVN filePath ===>>> " + input.getAbsolutePath());
 
         String svnPath = ConfigExtension.SVN_URL + "/" + input.getName();
@@ -68,6 +68,44 @@ public class Commit2SVN extends DefaultTask {
         }
 
         doImport(input, svnUri);
+    }
+
+    /**
+     * 写入美团walle渠道信息
+     */
+    private void writeChannel() {
+        System.out.println("Walle plugin state :" + ConfigExtension.SVN_WALLE_STATE);
+        if (!ConfigExtension.SVN_WALLE_STATE) return;
+        System.out.println("Walle =====>>>> start writer channel :" + ConfigExtension.SVN_WALLE_CHANNEL);
+        try {
+            ChannelWriter.put(input, ConfigExtension.SVN_WALLE_CHANNEL);
+            System.out.println("Walle =====>>>> writer channel completed");
+        } catch (IOException | SignatureNotFoundException e) {
+            e.printStackTrace();
+            System.out.println("Walle =====>>>> writer channel error");
+        }
+        ChannelInfo channelInfo = ChannelReader.get(input);
+        if (channelInfo != null) {
+            String channel = channelInfo.getChannel();
+            System.out.println("Walle =====>>>> reader channel :" + channel);
+        } else {
+            System.out.println("Walle =====>>>> reader channel error");
+        }
+    }
+
+    /**
+     * 检测文件
+     */
+    private void checkFile() {
+        if (input == null) {
+            throw new IllegalArgumentException("Commit2SVN: input APK file is null");
+        }
+        if (!input.exists()) {
+            throw new IllegalArgumentException("Commit2SVN: input APK file un exists :" + input.getAbsolutePath());
+        }
+        if (input.isDirectory()) {
+            throw new IllegalArgumentException("Commit2SVN: input APK file isDirectory :" + input.getAbsolutePath());
+        }
     }
 
     /**
