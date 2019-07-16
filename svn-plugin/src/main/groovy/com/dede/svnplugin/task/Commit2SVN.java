@@ -1,6 +1,6 @@
 package com.dede.svnplugin.task;
 
-import com.dede.svnplugin.ConfigExtension;
+import com.dede.svnplugin.plugin.Extension;
 import com.meituan.android.walle.ChannelInfo;
 import com.meituan.android.walle.ChannelReader;
 import com.meituan.android.walle.ChannelWriter;
@@ -34,13 +34,15 @@ public class Commit2SVN extends DefaultTask {
     @Input
     public Project targetProject;
 
+    private Extension config;
+
     @TaskAction
     public void action() {
         System.out.println("SVN-Plugin =====>>>> Commit2SVN");
 
-        ConfigExtension.initConfig(targetProject);
+        config = Extension.getConfig(this.targetProject);
 
-        if (!ConfigExtension.PLUGIN_STATE) {
+        if (!config.getPluginState()) {
             System.out.println("SVN-Plugin is Disable!!!");
             return;
         }
@@ -51,7 +53,7 @@ public class Commit2SVN extends DefaultTask {
 
         System.out.println("Commit2SVN filePath ===>>> " + input.getAbsolutePath());
 
-        String svnPath = ConfigExtension.SVN_URL + "/" + input.getName();
+        String svnPath = config.getSvnUrl() + "/" + input.getName();
         System.out.println("Commit2SVN svnPath ===>>> " + svnPath);
         SVNURL svnUri = parseSVN_URI(svnPath);
         System.out.println("Commit2SVN svnUri ===>>> " + svnUri.getPath());
@@ -74,11 +76,11 @@ public class Commit2SVN extends DefaultTask {
      * 写入美团walle渠道信息
      */
     private void writeChannel() {
-        System.out.println("Walle plugin state :" + ConfigExtension.SVN_WALLE_STATE);
-        if (!ConfigExtension.SVN_WALLE_STATE) return;
-        System.out.println("Walle =====>>>> start writer channel :" + ConfigExtension.SVN_WALLE_CHANNEL);
+        System.out.println("Walle plugin state :" + config.getWalleState());
+        if (!config.getWalleState()) return;
+        System.out.println("Walle =====>>>> start writer channel :" + config.getWalleChannel());
         try {
-            ChannelWriter.put(input, ConfigExtension.SVN_WALLE_CHANNEL);
+            ChannelWriter.put(input, config.getWalleChannel());
             System.out.println("Walle =====>>>> writer channel completed");
         } catch (IOException | SignatureNotFoundException e) {
             e.printStackTrace();
@@ -118,10 +120,10 @@ public class Commit2SVN extends DefaultTask {
     private boolean doImport(File source, SVNURL svnPath) {
         DAVRepositoryFactory.setup();
         SVNClientManager svnClientManager = SVNClientManager.newInstance(SVNWCUtil.createDefaultOptions(true),
-                ConfigExtension.SVN_USERNAME, ConfigExtension.SVN_PASSWORD);
+                config.getSvnUserName(), config.getSvnPassword());
         try {
             SVNCommitInfo commitInfo = svnClientManager.getCommitClient().doImport(source, svnPath,
-                    ConfigExtension.MSG_IMPORT, null, false,
+                    config.getMsgImport(), null, false,
                     false, SVNDepth.INFINITY);
             System.out.println("Import file to SVN ==>>> Author:" + commitInfo.getAuthor() +
                     ", Data:" + commitInfo.getDate() +
@@ -142,7 +144,7 @@ public class Commit2SVN extends DefaultTask {
     private SVNNodeKind checkPath(SVNURL svnPath) {
         DAVRepositoryFactory.setup();
         SVNClientManager svnClientManager = SVNClientManager.newInstance(SVNWCUtil.createDefaultOptions(true),
-                ConfigExtension.SVN_USERNAME, ConfigExtension.SVN_PASSWORD);
+                config.getSvnUserName(), config.getSvnPassword());
         try {
             SVNRepository repository = svnClientManager.createRepository(svnPath, true);
             return repository.checkPath("", SVNRepository.INVALID_REVISION);
@@ -161,9 +163,9 @@ public class Commit2SVN extends DefaultTask {
     private boolean doDelete(SVNURL svnPath) {
         DAVRepositoryFactory.setup();
         SVNClientManager svnClientManager = SVNClientManager.newInstance(SVNWCUtil.createDefaultOptions(true),
-                ConfigExtension.SVN_USERNAME, ConfigExtension.SVN_PASSWORD);
+                config.getSvnUserName(), config.getSvnPassword());
         try {
-            SVNCommitInfo commitInfo = svnClientManager.getCommitClient().doDelete(new SVNURL[]{svnPath}, ConfigExtension.MSG_DELETE);
+            SVNCommitInfo commitInfo = svnClientManager.getCommitClient().doDelete(new SVNURL[]{svnPath}, config.getMsgDelete());
             System.out.println("Delete file from SVN ==>>> Author:" + commitInfo.getAuthor() +
                     ", Data:" + commitInfo.getDate() +
                     ", NewVersion:" + commitInfo.getNewRevision());

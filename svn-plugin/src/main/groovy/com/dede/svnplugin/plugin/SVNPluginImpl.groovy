@@ -42,15 +42,21 @@ class SVNPluginImpl implements Plugin<Project> {
             throw new ProjectConfigurationException("Plugin requires the 'com.android.tools.build:gradle' version 2.2.0 or above to be configured.", null)
         }
 
-        project.extensions.create("com.dede.svn-plugin", com.dede.svnplugin.ConfigExtension.class, project)
+        applyExtension(project)
 
         applyTask(project)
     }
 
-    private static void applyTask(Project project) {
+    private void applyExtension(Project project) {
+        project.extensions.create("svn_plugin", Extension.class, project)
+    }
+
+    private void applyTask(Project project) {
         project.afterEvaluate {
+            Extension config = Extension.getConfig(project)
+
             project.android.applicationVariants.all { BaseVariant variant ->
-                if (com.dede.svnplugin.ConfigExtension.SVN_IGNORE_DEBUG && variant.buildType.name != 'release') return// 忽略debug task
+                if (config.ignoreDebug && variant.buildType.name != 'release') return// 忽略debug task
 
                 def variantName = variant.name.capitalize()
                 def task = project.tasks.create("assemble${variantName}AndCommitSVN",

@@ -46,6 +46,14 @@ android {
 
 }
 
+svn_plugin {
+    pluginState = true
+    svnUrl = "http://svn.guchele.cn/svn/sherry/trunk/app/android/releases/car300"
+    msgImport = "上传测试包"
+    msgDelete = "删除测试包"
+    ignoreDebug = true
+}
+
 dependencies {
     compile 'com.android.support:appcompat-v7:27.1.1'
     compile 'com.android.support.constraint:constraint-layout:1.1.3'
