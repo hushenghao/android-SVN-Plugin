@@ -52,6 +52,8 @@ svn_plugin {
     msgImport = "上传测试包"
     msgDelete = "删除测试包"
     ignoreDebug = true
+    walleState = true
+    walleChannel = "fortest"
 }
 
 dependencies {
