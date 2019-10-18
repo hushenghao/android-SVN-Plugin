@@ -18,14 +18,11 @@ dependencies {
     // svn操作库
     compile 'org.tmatesoft.svnkit:svnkit:1.9.3'
     // 美团walle读取模块
-//    compile 'com.meituan.android.walle:payload_reader:1.1.6'
+    compile "com.meituan.android.walle:payload_reader:$walleVersion"
     // 美团walle写入模块
-//    compile 'com.meituan.android.walle:payload_writer:1.1.6'
+    compile "com.meituan.android.walle:payload_writer:$walleVersion"
     // walle内部的json解析库
-//    compile 'org.json:json:20080701'
-
-    // walle命令行工具，包含上面的代码
-    compile files('lib/walle-cli-all-fix-signatrue-scheme-v3.jar')
+    compile 'org.json:json:20180813'
 }
 
 group = 'com.dede.svnplugin'

@@ -59,4 +59,5 @@ svn_plugin {
 dependencies {
     compile 'com.android.support:appcompat-v7:27.1.1'
     compile 'com.android.support.constraint:constraint-layout:1.1.3'
+    compile "com.meituan.android.walle:library:$walleVersion"
 }

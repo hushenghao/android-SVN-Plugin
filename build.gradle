@@ -1,7 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-
+    ext.walleVersion = '1.1.7'
     repositories {
         maven { url uri('./repo') }// maven本地仓库
         maven { url "https://plugins.gradle.org/m2/" }// gradle仓库
@@ -36,6 +36,7 @@ allprojects {
             name 'Google'
         }
         jcenter()
+        maven { url uri('../repo') }// maven本地仓库 for demo module
     }
 
     tasks.withType(Javadoc) {
