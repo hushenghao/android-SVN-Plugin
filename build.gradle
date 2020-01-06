@@ -1,7 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.walleVersion = '1.1.8-SNAPSHOT'
+    ext.walleVersion = '1.1.8'
     repositories {
         maven { url 'http://192.168.1.107:8081/repository/maven-public/' }
         google()
