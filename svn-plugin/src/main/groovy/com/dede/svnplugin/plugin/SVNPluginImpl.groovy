@@ -1,7 +1,6 @@
 package com.dede.svnplugin.plugin
 
 import com.android.build.gradle.api.BaseVariant
-import com.android.build.gradle.api.BaseVariantOutput
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.ProjectConfigurationException
@@ -38,8 +37,8 @@ class SVNPluginImpl implements Plugin<Project> {
             } catch (NoSuchFieldException ignore) {
             }
         }
-        if (version != null && versionCompare(version, "2.2.0") < 0) {
-            throw new ProjectConfigurationException("Plugin requires the 'com.android.tools.build:gradle' version 2.2.0 or above to be configured.", null)
+        if (version != null && versionCompare(version, "3.0.0") < 0) {
+            throw new ProjectConfigurationException("Plugin requires the 'com.android.tools.build:gradle' version 3.0.0 or above to be configured.", null)
         }
 
         applyExtension(project)
@@ -59,17 +58,18 @@ class SVNPluginImpl implements Plugin<Project> {
                 if (config.ignoreDebug && variant.buildType.name != 'release') return// 忽略debug task
 
                 def variantName = variant.name.capitalize()
-                def task = project.tasks.create("assemble${variantName}AndCommitSVN",
+                com.dede.svnplugin.task.Commit2SVN task = project.tasks.create("assemble${variantName}AndCommitSVN",
                         com.dede.svnplugin.task.Commit2SVN.class)// don't remove package
                 task.setGroup("svn")
                 task.targetProject = project
-                variant.outputs.each { BaseVariantOutput output ->
-                    task.input = output.outputFile// 设置apk文件路径
+                task.variant = variant
+
+                // 执行上传task前先执行打包task
+                if (variant.hasProperty('assembleProvider')) {
+                    task.dependsOn variant.assembleProvider.get()
+                } else {
+                    task.dependsOn variant.assemble
                 }
-
-                def assembleTask = project.tasks.findByName("assemble${variantName}")
-
-                task.dependsOn assembleTask// 执行上传task前先执行打包task
             }
         }
     }

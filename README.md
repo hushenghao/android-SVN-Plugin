@@ -43,7 +43,7 @@ Android assembleRelease Package and auto commit to SVN
         }
         
 
-* 依赖插件，三种方式
+* 依赖插件
 
     [**jcenter**](https://bintray.com/dede/AndroidLib/com.dede.svnplugin) 依赖，编辑项目根目录build.gradle
 
@@ -58,17 +58,6 @@ Android assembleRelease Package and auto commit to SVN
         buildscript {
             repositories {
                 maven { url "https://plugins.gradle.org/m2/" }
-            }
-            dependencies {
-                classpath 'com.dede.svnplugin:svn-plugin:0.1.1'
-            }
-        }
-
-    ~~本地仓库~~ 依赖(不推荐)，复制repo文件夹到项目，并编辑项目根目录build.gradle
-
-        buildscript {
-            repositories {
-                maven { url uri('./repo') }// 仓库路径指向repo文件夹
             }
             dependencies {
                 classpath 'com.dede.svnplugin:svn-plugin:0.1.1'

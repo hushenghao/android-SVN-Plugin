@@ -1,5 +1,7 @@
 package com.dede.svnplugin.task;
 
+import com.android.build.OutputFile;
+import com.android.build.gradle.api.BaseVariant;
 import com.dede.svnplugin.plugin.Extension;
 import com.meituan.android.walle.ChannelInfo;
 import com.meituan.android.walle.ChannelReader;
@@ -22,6 +24,7 @@ import org.tmatesoft.svn.core.wc.SVNWCUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 
 /**
  * 上传文件到svn
@@ -29,8 +32,7 @@ import java.io.IOException;
 public class Commit2SVN extends DefaultTask {
 
     @Input
-    public File input;
-
+    public BaseVariant variant;
     @Input
     public Project targetProject;
 
@@ -47,46 +49,52 @@ public class Commit2SVN extends DefaultTask {
             return;
         }
 
-        checkFile();
+        Iterator iterator = variant.getOutputs().iterator();
+        while (iterator.hasNext()) {
+            OutputFile next = (OutputFile) iterator.next();
+            File apkFile = next.getOutputFile();
 
-        writeChannel();
+            checkFile(apkFile);
 
-        System.out.println("Commit2SVN filePath ===>>> " + input.getAbsolutePath());
+            writeChannel(apkFile);
 
-        String svnPath = config.getSvnUrl() + "/" + input.getName();
-        System.out.println("Commit2SVN svnPath ===>>> " + svnPath);
-        SVNURL svnUri = parseSVN_URI(svnPath);
-        System.out.println("Commit2SVN svnUri ===>>> " + svnUri.getPath());
+            System.out.println("Commit2SVN filePath ===>>> " + apkFile.getAbsolutePath());
 
-        SVNNodeKind nodeKind = checkPath(svnUri);// 检测文件是否存在
-        if (nodeKind == null) {
-            throw new IllegalStateException("Commit2SVN: check SVN Repository url error :" + svnUri.getPath());
+            String svnPath = config.getSvnUrl() + "/" + apkFile.getName();
+            System.out.println("Commit2SVN svnPath ===>>> " + svnPath);
+            SVNURL svnUri = parseSVN_URI(svnPath);
+            System.out.println("Commit2SVN svnUri ===>>> " + svnUri.getPath());
+
+            SVNNodeKind nodeKind = checkPath(svnUri);// 检测文件是否存在
+            if (nodeKind == null) {
+                throw new IllegalStateException("Commit2SVN: check SVN Repository url error :" + svnUri.getPath());
+            }
+            System.out.println("Check result:" + nodeKind);
+            if (nodeKind == SVNNodeKind.FILE) {
+                doDelete(svnUri);// 删除已存在的文件
+            } else if (nodeKind == SVNNodeKind.DIR) {
+                throw new IllegalStateException("Commit2SVN: check SVN Repository url :" + svnUri.getPath() + " isDirectory");
+            }
+
+            doImport(apkFile, svnUri);
         }
-        System.out.println("Check result:" + nodeKind);
-        if (nodeKind == SVNNodeKind.FILE) {
-            doDelete(svnUri);// 删除已存在的文件
-        } else if (nodeKind == SVNNodeKind.DIR) {
-            throw new IllegalStateException("Commit2SVN: check SVN Repository url :" + svnUri.getPath() + " isDirectory");
-        }
-
-        doImport(input, svnUri);
     }
 
     /**
      * 写入美团walle渠道信息
      */
-    private void writeChannel() {
+    private void writeChannel(File apkFile) {
         System.out.println("Walle plugin state :" + config.getWalleState());
         if (!config.getWalleState()) return;
         System.out.println("Walle =====>>>> start writer channel :" + config.getWalleChannel());
         try {
-            ChannelWriter.put(input, config.getWalleChannel());
+            ChannelWriter.put(apkFile, config.getWalleChannel());
             System.out.println("Walle =====>>>> writer channel completed");
         } catch (IOException | SignatureNotFoundException e) {
             e.printStackTrace();
             System.out.println("Walle =====>>>> writer channel error");
         }
-        ChannelInfo channelInfo = ChannelReader.get(input);
+        ChannelInfo channelInfo = ChannelReader.get(apkFile);
         if (channelInfo != null) {
             String channel = channelInfo.getChannel();
             System.out.println("Walle =====>>>> reader channel :" + channel);
@@ -98,15 +106,15 @@ public class Commit2SVN extends DefaultTask {
     /**
      * 检测文件
      */
-    private void checkFile() {
-        if (input == null) {
-            throw new IllegalArgumentException("Commit2SVN: input APK file is null");
+    private void checkFile(File apkFile) {
+        if (apkFile == null) {
+            throw new IllegalArgumentException("Commit2SVN: apkFile APK file is null");
         }
-        if (!input.exists()) {
-            throw new IllegalArgumentException("Commit2SVN: input APK file un exists :" + input.getAbsolutePath());
+        if (!apkFile.exists()) {
+            throw new IllegalArgumentException("Commit2SVN: apkFile APK file un exists :" + apkFile.getAbsolutePath());
         }
-        if (input.isDirectory()) {
-            throw new IllegalArgumentException("Commit2SVN: input APK file isDirectory :" + input.getAbsolutePath());
+        if (apkFile.isDirectory()) {
+            throw new IllegalArgumentException("Commit2SVN: apkFile APK file isDirectory :" + apkFile.getAbsolutePath());
         }
     }
 
