@@ -22,10 +22,6 @@ Android assembleRelease Package and auto commit to SVN
         svn.import=
         # svn忽略debugTask
         svn.ignore.debug=true
-        # 使用美团walle写入渠道信息
-        svn.walle.state=false
-        # walle渠道名，必须开启svn.walle.state
-        svn.walle.channel=fortest
         
  * 或者在module.gradle中添加：
  
@@ -38,8 +34,10 @@ Android assembleRelease Package and auto commit to SVN
             ignoreDebug = true
             svnUserName = "dede"
             svnPassword = "1234"
-            walleState = true
-            walleChannel = "fortest"
+            preCommit { file ->
+                // 打包完成,上传前 回调
+                println "preCommit :" + file
+            }
         }
         
 
@@ -49,7 +47,7 @@ Android assembleRelease Package and auto commit to SVN
 
         buildscript {
             dependencies {
-                classpath 'com.dede.svnplugin:svn-plugin:0.1.1'
+                classpath 'com.dede.svnplugin:svn-plugin:0.1.4'
             }
         }
 

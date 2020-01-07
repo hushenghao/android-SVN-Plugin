@@ -1,12 +1,8 @@
 package com.dede.svnplugin.task;
 
-import com.android.build.OutputFile;
 import com.android.build.gradle.api.BaseVariant;
+import com.android.build.gradle.api.BaseVariantOutput;
 import com.dede.svnplugin.plugin.Extension;
-import com.meituan.android.walle.ChannelInfo;
-import com.meituan.android.walle.ChannelReader;
-import com.meituan.android.walle.ChannelWriter;
-import com.meituan.android.walle.SignatureNotFoundException;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.Project;
@@ -23,8 +19,8 @@ import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.Iterator;
+
+import groovy.lang.Closure;
 
 /**
  * 上传文件到svn
@@ -49,18 +45,25 @@ public class Commit2SVN extends DefaultTask {
             return;
         }
 
-        Iterator iterator = variant.getOutputs().iterator();
-        while (iterator.hasNext()) {
-            OutputFile next = (OutputFile) iterator.next();
-            File apkFile = next.getOutputFile();
+        for (BaseVariantOutput baseVariantOutput : variant.getOutputs()) {
+            File apkFile = baseVariantOutput.getOutputFile();
 
             checkFile(apkFile);
 
-            writeChannel(apkFile);
+            Closure preCommit = config.getPreCommit();
+            if (preCommit != null) {
+                preCommit.call(apkFile);
+            }
 
             System.out.println("Commit2SVN filePath ===>>> " + apkFile.getAbsolutePath());
 
-            String svnPath = config.getSvnUrl() + "/" + apkFile.getName();
+            String svnUrlParent = config.getSvnUrl();
+            String svnPath;
+            if (svnUrlParent != null && svnUrlParent.endsWith("/")) {
+                svnPath = svnUrlParent + apkFile.getName();
+            } else {
+                svnPath = svnUrlParent + "/" + apkFile.getName();
+            }
             System.out.println("Commit2SVN svnPath ===>>> " + svnPath);
             SVNURL svnUri = parseSVN_URI(svnPath);
             System.out.println("Commit2SVN svnUri ===>>> " + svnUri.getPath());
@@ -71,35 +74,16 @@ public class Commit2SVN extends DefaultTask {
             }
             System.out.println("Check result:" + nodeKind);
             if (nodeKind == SVNNodeKind.FILE) {
-                doDelete(svnUri);// 删除已存在的文件
+                if (!doDelete(svnUri)) {// 删除已存在的文件
+                    System.err.println("Commit2SVN: delete SVN file error url :" + svnUri.getPath());
+                }
             } else if (nodeKind == SVNNodeKind.DIR) {
                 throw new IllegalStateException("Commit2SVN: check SVN Repository url :" + svnUri.getPath() + " isDirectory");
             }
 
-            doImport(apkFile, svnUri);
-        }
-    }
-
-    /**
-     * 写入美团walle渠道信息
-     */
-    private void writeChannel(File apkFile) {
-        System.out.println("Walle plugin state :" + config.getWalleState());
-        if (!config.getWalleState()) return;
-        System.out.println("Walle =====>>>> start writer channel :" + config.getWalleChannel());
-        try {
-            ChannelWriter.put(apkFile, config.getWalleChannel());
-            System.out.println("Walle =====>>>> writer channel completed");
-        } catch (IOException | SignatureNotFoundException e) {
-            e.printStackTrace();
-            System.out.println("Walle =====>>>> writer channel error");
-        }
-        ChannelInfo channelInfo = ChannelReader.get(apkFile);
-        if (channelInfo != null) {
-            String channel = channelInfo.getChannel();
-            System.out.println("Walle =====>>>> reader channel :" + channel);
-        } else {
-            System.out.println("Walle =====>>>> reader channel error");
+            if(!doImport(apkFile, svnUri)) {
+                System.err.println("Commit2SVN: import SVN file error url :" + svnUri.getPath());
+            }
         }
     }
 

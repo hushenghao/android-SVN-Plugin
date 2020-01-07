@@ -44,13 +44,25 @@ class Extension {
 
     /**
      * 是否打开walle渠道写入
+     * 现已不处理, 替换为preCommit
+     * @see #preCommit
      */
+    @Deprecated
     boolean walleState
 
     /**
      * walle打开时写入的渠道
+     * 现已不处理, 替换为preCommit
+     * @see #preCommit
      */
+    @Deprecated
     String walleChannel
+
+    /**
+     * 上传之前回调, 可以用于渠道写入
+     * 上传前修改文件的闭包
+     */
+    Closure preCommit
 
     Extension(Project project) {
         File file = new File(project.getRootDir(), "local.properties")
@@ -100,14 +112,6 @@ class Extension {
         value = properties.getProperty("svn.ignore.debug")
         if (!TextUtil.isNull(value)) {
             ignoreDebug = Boolean.valueOf(value)
-        }
-        value = properties.getProperty("svn.walle.state")
-        if (!TextUtil.isNull(value)) {
-            ignoreDebug = Boolean.valueOf(value)
-        }
-        value = properties.get("svn.walle.channel")
-        if (!TextUtil.isNull(value)) {
-            walleChannel = value
         }
     }
 

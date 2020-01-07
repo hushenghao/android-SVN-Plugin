@@ -11,7 +11,7 @@ public class TextUtil {
         text = text.trim();
         if (text.length() == 0) return true;
 
-        return text.toLowerCase().equals("NULL");
+        return text.toUpperCase().equals("NULL");
 
     }
 }

@@ -2,7 +2,7 @@ apply plugin: 'groovy'
 apply plugin: 'maven'// 本地仓库
 
 //apply from: 'gradle.gradle'// 上传gradle
-//apply from: 'bintray.gradle'// 上传jcenter
+apply from: 'bintray.gradle'// 上传jcenter
 
 dependencies {
     implementation gradleApi()
@@ -11,16 +11,10 @@ dependencies {
     implementation 'com.android.tools.build:gradle:3.0.0'
     // svn操作库
     implementation 'org.tmatesoft.svnkit:svnkit:1.9.3'
-    // 美团walle读取模块
-    implementation "com.meituan.android.walle:payload_reader:$walleVersion"
-    // 美团walle写入模块
-    implementation "com.meituan.android.walle:payload_writer:$walleVersion"
-    // walle内部的json解析库
-    implementation 'org.json:json:20180813'
 }
 
 group = 'com.dede.svnplugin'
-version = '0.1.3'
+version = '0.1.4'
 
 def getRepositoryUrl() {
     return isSnapshot() ? SNAPSHOT_REPOSITORY_URL : RELEASE_REPOSITORY_URL
@@ -31,12 +25,13 @@ def isSnapshot() {
 }
 
 def hasAndroidPlugin() {
-    return getPlugins().inject(false) { a, b->
+    return getPlugins().inject(false) { a, b ->
         def classStr = b.getClass().name
         def isAndroid = ("com.android.build.gradle.LibraryPlugin" == classStr) || ("com.android.build.gradle.AppPlugin" == classStr)
         a || isAndroid
     }
 }
+
 task sourcesJar(type: Jar) {
     if (hasAndroidPlugin()) {
         from android.sourceSets.main.java.srcDirs
@@ -55,5 +50,6 @@ uploadArchives {
         repository(url: repositoryUrl) {
             authentication(userName: USER, password: PASSWORD)
         }
+//        repository(url: uri('../repo')) {}
     }
 }
