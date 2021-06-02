@@ -66,21 +66,22 @@ class Extension {
 
     Extension(Project project) {
         File file = new File(project.getRootDir(), "local.properties")
-        System.out.println("SVN-Plugin load config ===>>> " + file.getAbsolutePath())
-
         Properties properties = new Properties()
-        InputStreamReader reader
-        try {
-            reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)
-            properties.load(reader)
-        } catch (IOException e) {
-            throw new ProjectConfigurationException("Plugin load config file " +
-                    file.getAbsolutePath() + " error", e)
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close()
-                } catch (IOException ignore) {
+        if (file.exists() && file.isFile()) {
+            System.out.println("SVN-Plugin load config ===>>> " + file.getAbsolutePath())
+            InputStreamReader reader
+            try {
+                reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)
+                properties.load(reader)
+            } catch (IOException e) {
+                throw new ProjectConfigurationException("Plugin load config file " +
+                        file.getAbsolutePath() + " error", e)
+            } finally {
+                if (reader != null) {
+                    try {
+                        reader.close()
+                    } catch (IOException ignore) {
+                    }
                 }
             }
         }

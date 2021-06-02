@@ -14,7 +14,7 @@ dependencies {
 }
 
 group = 'com.dede.svnplugin'
-version = '0.1.4'
+version = '0.1.5'
 
 def getRepositoryUrl() {
     return isSnapshot() ? SNAPSHOT_REPOSITORY_URL : RELEASE_REPOSITORY_URL
@@ -50,6 +50,5 @@ uploadArchives {
         repository(url: repositoryUrl) {
             authentication(userName: USER, password: PASSWORD)
         }
-//        repository(url: uri('../repo')) {}
     }
 }

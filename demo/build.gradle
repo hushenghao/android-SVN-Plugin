@@ -46,7 +46,7 @@ import com.meituan.android.walle.ChannelWriter
 
 buildscript {
     repositories {
-        maven { url 'http://192.168.1.107:8081/repository/maven-public/' }
+        maven { url 'http://172.16.0.236:8081/repository/maven-public/' }
         jcenter()
     }
     dependencies {

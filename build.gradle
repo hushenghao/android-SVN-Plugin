@@ -3,8 +3,7 @@
 buildscript {
     ext.walleVersion = '1.1.8'
     repositories {
-//        maven { url uri('./repo') }
-        maven { url 'http://192.168.1.107:8081/repository/maven-public/' }
+        maven { url 'http://172.16.0.236:8081/repository/maven-public/' }
         google()
         jcenter()
     }
@@ -16,7 +15,7 @@ buildscript {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
 
         // groupId:moduleName:version
-        classpath 'com.dede.svnplugin:svn-plugin:0.1.4'
+        classpath 'com.dede.svnplugin:svn-plugin:0.1.5'
         classpath "com.meituan.android.walle:plugin:$walleVersion"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -25,8 +24,7 @@ buildscript {
 
 allprojects {
     repositories {
-//        maven { url uri('../repo') }
-        maven { url 'http://192.168.1.107:8081/repository/maven-public/' }
+        maven { url 'http://172.16.0.236:8081/repository/maven-public/' }
         google()
         jcenter()
     }
